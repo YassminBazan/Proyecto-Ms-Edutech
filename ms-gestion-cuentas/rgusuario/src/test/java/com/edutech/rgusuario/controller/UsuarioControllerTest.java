@@ -50,18 +50,26 @@ class UsuarioControllerTest {
     private ObjectMapper objectMapper;
 
 
+
     @Test
+    //withMockUser por lo de Spring Security
     @WithMockUser(roles = "ADMIN")
-    void obtenerUsuarios_existentes_devuelve200ConLista() throws Exception {
+    void obtenerUsuarios_devuelve200ConLista() throws Exception {
+        //Una lista con dos usuarios vacíos, para simular resultados aunque no tengan datos
         List<Usuario> lista = List.of(new Usuario(), new Usuario());
+        //Mock del Service para devolver la lista
         when(usuarioService.findAll()).thenReturn(lista);
 
+        //simula una petición http, por eso mockMvc
         mockMvc.perform(get("/api/v1/usuarios"))
             .andExpect(status().isOk())
+            //Valida que el campo tiene Lista de usuarios
             .andExpect(jsonPath("$.mensaje").value("Lista de usuarios"))
+            //array porque es una lista, data confirma esto
             .andExpect(jsonPath("$.data").isArray())
             .andExpect(jsonPath("$.data.length()").value(2));
     }
+
 
     @Test
     @WithMockUser(roles = "ADMIN")
