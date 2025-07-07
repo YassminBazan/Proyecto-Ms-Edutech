@@ -1,13 +1,13 @@
 package com.edutech.rgusuario.controller;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,13 +33,18 @@ public class UsuarioControllerV2 {
     @Autowired
     private UsuarioModelAssembler assembler;
 
+    //petición get, el contenido será Hal+JSON (incluye _links y _embedded)
     @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    //Envuelve una lista y les puede agregar enlaces generales
     public CollectionModel<EntityModel<Usuario>> getAllUsuarios() {
-        List<EntityModel<Usuario>> usuarios = usuarioService.findAll().stream()
-            .map(assembler::toModel)
-            .toList();
+        List<EntityModel<Usuario>> usuarios = usuarioService.findAll().stream()//Se pide todos los usuarios del sistema
+            .map(assembler::toModel) //convierte cada usuario en un EntityModel
+            .toList(); //transforma el stream a una lista real
 
+        //Se devuelve una colección de usuarios con sus enlaces
         return CollectionModel.of(usuarios,
+            //linkTo para generar la url
+            //withSelfRel que el enlace se apunta a sí mismo
             linkTo(methodOn(UsuarioControllerV2.class).getAllUsuarios()).withSelfRel());
     }
 
