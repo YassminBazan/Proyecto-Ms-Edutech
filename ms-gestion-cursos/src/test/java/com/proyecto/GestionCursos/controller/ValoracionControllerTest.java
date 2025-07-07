@@ -9,6 +9,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -24,6 +25,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@AutoConfigureMockMvc(addFilters = false)
 public class ValoracionControllerTest {
 
     @Mock
@@ -65,7 +67,7 @@ public class ValoracionControllerTest {
     }
 
     @Test
-    void crearValoracion_shouldReturnCreatedValoracion() {
+    void testCrearValoracion() {
         // Given
         Map<String, Object> payload = Map.of(
                 "idUsuario", 101L,
@@ -86,7 +88,7 @@ public class ValoracionControllerTest {
     }
 
     @Test
-    void actualizarValoracion_shouldReturnUpdatedValoracion() {
+    void testActualizarValoracion() {
         // Given
         Long idValoracion = 1L;
         Map<String, Object> payload = Map.of(
@@ -115,7 +117,7 @@ public class ValoracionControllerTest {
     }
 
     @Test
-    void actualizarValoracion_shouldReturnNotFoundWhenValoracionDoesNotExist() {
+    void testActualizarValoracionMal() {
         // Given
         Long idValoracion = 99L; // Un ID que no existe
         Map<String, Object> payload = Map.of(
@@ -136,7 +138,7 @@ public class ValoracionControllerTest {
     }
 
     @Test
-    void obtenerValoracionPorId_shouldReturnValoracion() {
+    void testObtenerValoracionPorIdOk() {
         // Given
         Long idValoracion = 1L;
         when(valoracionService.obtenerValoracionPorId(idValoracion))
@@ -152,7 +154,7 @@ public class ValoracionControllerTest {
     }
 
     @Test
-    void obtenerValoracionPorId_shouldReturnNotFound() {
+    void testObtenerValoracionPorIdMal() {
         // Given
         Long idValoracion = 99L; // ID que no existe
         when(valoracionService.obtenerValoracionPorId(idValoracion))
@@ -167,7 +169,7 @@ public class ValoracionControllerTest {
     }
 
     @Test
-    void obtenerValoracionesPorUsuario_shouldReturnListOfValoraciones() {
+    void testObtenerValoracionesPorUsuario() {
         // Given
         Long idUsuario = 101L;
         List<Valoracion> valoracionesUsuario = Arrays.asList(valoracion1);
@@ -184,7 +186,7 @@ public class ValoracionControllerTest {
     }
 
     @Test
-    void obtenerValoracionesPorCurso_shouldReturnListOfValoraciones() {
+    void testObtenerValoracionesPorCurso() {
         // Given
         Long idCurso = 1L;
         List<Valoracion> valoracionesCurso = Arrays.asList(valoracion1, valoracion2);
@@ -201,7 +203,7 @@ public class ValoracionControllerTest {
     }
 
     @Test
-    void obtenerTodasLasValoraciones_shouldReturnListOfAllValoraciones() {
+    void testObtenerTodasLasValoraciones() {
         // Given
         List<Valoracion> todasLasValoraciones = Arrays.asList(valoracion1, valoracion2);
         when(valoracionService.obtenerTodasLasValoraciones())

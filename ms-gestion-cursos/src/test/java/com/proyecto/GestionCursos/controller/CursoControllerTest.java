@@ -2,23 +2,22 @@ package com.proyecto.GestionCursos.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proyecto.GestionCursos.model.Curso;
+import com.proyecto.GestionCursos.model.CursoConClasesDTO;
 import com.proyecto.GestionCursos.service.CursoService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.cglib.core.Local;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
+
 
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -26,6 +25,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(CursoController.class)
+@AutoConfigureMockMvc(addFilters = false)
+
 public class CursoControllerTest {
 
     //Permite hacer peticiones sin levantar servidor 
@@ -231,11 +232,20 @@ public class CursoControllerTest {
 
 
 
+    @Test
+    void testObtenerCursoConClases() throws Exception {
+        CursoConClasesDTO dto = new CursoConClasesDTO();
+        dto.setIdCurso(1L);
+        dto.setNombreCurso("Java 1");
+        dto.setClases(Collections.emptyList());
 
+        Mockito.when(cursoService.obtenerCursoConClases(1L)).thenReturn(dto);
 
-
-
-
+        mockMvc.perform(get("/api/v1/cursos/1/detalle"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.idCurso").value(1L))
+                .andExpect(jsonPath("$.nombreCurso").value("Java 1"));
+    }
 
 
 }

@@ -6,8 +6,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +25,6 @@ import com.proyecto.GestionCursos.model.Curso;
 import com.proyecto.GestionCursos.repository.CategoriaRepository;
 import com.proyecto.GestionCursos.repository.CursoRepository;
 import com.proyecto.GestionCursos.repository.InstructorReplicadoRepository;
-import com.proyecto.GestionCursos.repository.UsuarioValidoRepository;
 
 public class CursoServiceTest {
 
@@ -37,9 +34,6 @@ public class CursoServiceTest {
 
     @Mock
     private CategoriaRepository categoriaRepository;
-
-    @Mock
-    private UsuarioValidoRepository usuarioValidoRepository;
 
     @Mock
     private InstructorReplicadoRepository instructorReplicadoRepository;
@@ -90,9 +84,6 @@ public class CursoServiceTest {
         double valorCurso = 1500;
         Set<Long> idsCategorias = Set.of(1L, 2L);
 
-        // Mock usuario válido
-        when(usuarioValidoRepository.existsById(idCreador)).thenReturn(true);
-
         // Mock categorías válidas
         Categoria cat1 = new Categoria();
         cat1.setIdCategoria(1L);
@@ -125,7 +116,6 @@ public class CursoServiceTest {
     @DisplayName("Debe lanzar excepción si el nombre del curso es null")
     void testCrearCursoConNombreNull() {
         Long idCreador = 1L;
-        when(usuarioValidoRepository.existsById(idCreador)).thenReturn(true);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             cursoService.crearCurso(null, "Descripción válida", 2000, idCreador, Set.of(1L));
@@ -138,7 +128,6 @@ public class CursoServiceTest {
     @DisplayName("Debe lanzar excepción si el nombre del curso es blanco")
     void testCrearCursoConNombreBlanco() {
         Long idCreador = 1L;
-        when(usuarioValidoRepository.existsById(idCreador)).thenReturn(true);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             cursoService.crearCurso("   ", "Descripción válida", 2000, idCreador, Set.of(1L));
@@ -150,7 +139,6 @@ public class CursoServiceTest {
     @DisplayName("Debe permitir descripción null")
     void testCrearCursoDescripcionNull() {
         Long idCreador = 1L;
-        when(usuarioValidoRepository.existsById(idCreador)).thenReturn(true);
         when(cursoRepository.save(any(Curso.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         Curso curso = cursoService.crearCurso("Curso válido", null, 2000, idCreador, Set.of());
@@ -162,7 +150,6 @@ public class CursoServiceTest {
     @DisplayName("Debe lanzar excepción si la descripción excede los 1000 caracteres")
     void testCrearCursoDescripcionMuyLarga() {
         Long idCreador = 1L;
-        when(usuarioValidoRepository.existsById(idCreador)).thenReturn(true);
 
         String descripcionLarga = "a".repeat(1001); // 1001 caracteres
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
@@ -176,7 +163,6 @@ public class CursoServiceTest {
     @DisplayName("Debe lanzar excepción si el valor del curso es menor a 1000")
     void testCrearCursoValorMenorA1000() {
         Long idCreador = 1L;
-        when(usuarioValidoRepository.existsById(idCreador)).thenReturn(true);
 
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
             cursoService.crearCurso("Curso válido", "Descripción válida", 999, idCreador, Set.of(1L));
@@ -191,7 +177,6 @@ public class CursoServiceTest {
     @DisplayName("Debe asignar 'sinCategoria' si idsCategorias es null")
     void testCrearCursoConIdsCategoriasNull() {
         Long idCreador = 1L;
-        when(usuarioValidoRepository.existsById(idCreador)).thenReturn(true);
 
         Categoria sinCategoria = new Categoria();
         sinCategoria.setIdCategoria(99L);
@@ -212,7 +197,6 @@ public class CursoServiceTest {
     @DisplayName("Debe asignar 'sinCategoria' si idsCategorias está vacío")
     void testCrearCursoConIdsCategoriasVacio() {
         Long idCreador = 1L;
-        when(usuarioValidoRepository.existsById(idCreador)).thenReturn(true);
 
         Categoria sinCategoria = new Categoria();
         sinCategoria.setIdCategoria(99L);

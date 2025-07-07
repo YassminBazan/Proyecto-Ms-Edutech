@@ -1,10 +1,8 @@
 package com.proyecto.GestionCursos.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 import java.util.Arrays;
@@ -18,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import com.proyecto.GestionCursos.model.Categoria;
 import com.proyecto.GestionCursos.model.Curso;
 import com.proyecto.GestionCursos.model.Valoracion;
 import com.proyecto.GestionCursos.repository.CursoRepository;
