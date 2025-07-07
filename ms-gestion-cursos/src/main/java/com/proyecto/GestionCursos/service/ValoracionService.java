@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import com.proyecto.GestionCursos.model.Curso;
 import com.proyecto.GestionCursos.model.Valoracion;
 import com.proyecto.GestionCursos.repository.CursoRepository;
-import com.proyecto.GestionCursos.repository.UsuarioValidoRepository;
 import com.proyecto.GestionCursos.repository.ValoracionRepository;
 
 import jakarta.transaction.Transactional;
@@ -21,7 +20,6 @@ public class ValoracionService {
 
     private final CursoRepository cursoRepository;
     private final ValoracionRepository valoracionRepository;
-    private final UsuarioValidoRepository usuarioValidoRepository;
 
 
     //Para crear una valoracion
@@ -42,10 +40,6 @@ public class ValoracionService {
             throw new IllegalArgumentException("El comentario no puede exceder los 1000 caracteres.");
         }
 
-        //Validacion de usuario
-        if(!usuarioValidoRepository.existsById(idUsuario)){
-            throw new IllegalArgumentException("Usuario con id " + idUsuario + " no esta activo");
-        }
         //Validacion de curso
         Curso cursoAValorar = cursoRepository.findById(idCurso)
             .orElseThrow(() -> new IllegalArgumentException("El curso con ID " + idCurso + " no existe."));

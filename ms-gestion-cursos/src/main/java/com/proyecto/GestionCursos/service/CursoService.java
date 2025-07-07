@@ -17,7 +17,6 @@ import com.proyecto.GestionCursos.model.CursoConClasesDTO;
 import com.proyecto.GestionCursos.repository.CategoriaRepository;
 import com.proyecto.GestionCursos.repository.CursoRepository;
 import com.proyecto.GestionCursos.repository.InstructorReplicadoRepository;
-import com.proyecto.GestionCursos.repository.UsuarioValidoRepository;
 import com.proyecto.GestionCursos.repository.ValoracionRepository;
 
 import jakarta.transaction.Transactional;
@@ -30,7 +29,6 @@ public class CursoService {
     //Dependencias      
     private final CursoRepository cursoRepository;
     private final CategoriaRepository categoriaRepository;
-    private final UsuarioValidoRepository usuarioValidoRepository;
     private final InstructorReplicadoRepository instructorReplicadoRepository;
     private final ValoracionRepository valoracionRepository;
     //Añadido para hacer la conexion con MS GESTION DE CLASES
@@ -50,12 +48,6 @@ public class CursoService {
 
         if (valorCurso < 1000) {
             throw new IllegalArgumentException("El valor del curso debe ser mayor o igual $1000");
-        }
-
-
-        //Validacion para saber si el creador existe en la tabla replicada
-        if(!usuarioValidoRepository.existsById(idCreador)){
-            throw new IllegalArgumentException("El usuario creador no existe");
         }
 
         //Validacion de las categorias 

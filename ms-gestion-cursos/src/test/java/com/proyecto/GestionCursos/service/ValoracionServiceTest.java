@@ -20,10 +20,8 @@ import org.mockito.MockitoAnnotations;
 
 import com.proyecto.GestionCursos.model.Categoria;
 import com.proyecto.GestionCursos.model.Curso;
-import com.proyecto.GestionCursos.model.UsuarioValido;
 import com.proyecto.GestionCursos.model.Valoracion;
 import com.proyecto.GestionCursos.repository.CursoRepository;
-import com.proyecto.GestionCursos.repository.UsuarioValidoRepository;
 import com.proyecto.GestionCursos.repository.ValoracionRepository;
 public class ValoracionServiceTest {
 
@@ -34,9 +32,6 @@ public class ValoracionServiceTest {
     @Mock
     private ValoracionRepository valoracionRepository;
 
-    @Mock
-    private UsuarioValidoRepository usuarioValidoRepository;
-
     //Se crea instancia de ValoracionService 
     @InjectMocks
     private ValoracionService valoracionService;
@@ -44,7 +39,6 @@ public class ValoracionServiceTest {
     //Datos de prueba
     private Curso cursoDePrueba;
     private Valoracion valoracionDePrueba; 
-    private UsuarioValido usuarioValidoPrueba;
     private List<Valoracion> listaValoraciones;
 
     //Método que se ejecuta antes de cada prueba para preparar el entorno
@@ -54,9 +48,6 @@ public class ValoracionServiceTest {
         MockitoAnnotations.openMocks(this);
 
         //Preperacion de un objeto para los test
-
-        usuarioValidoPrueba = new UsuarioValido();
-        usuarioValidoPrueba.setIdUsuario(10L);
 
         cursoDePrueba = new Curso();
         cursoDePrueba.setIdCurso(1L);
@@ -83,9 +74,7 @@ public class ValoracionServiceTest {
 
 
         //Simulamos que los datos existen
-        when(cursoRepository.findById(idCurso)).thenReturn(Optional.of(cursoDePrueba));
-        when(usuarioValidoRepository.existsById(idUsuario)).thenReturn(true);
-    
+        when(cursoRepository.findById(idCurso)).thenReturn(Optional.of(cursoDePrueba)); 
 
         //Simulacion metodo save
         when(valoracionRepository.save(any(Valoracion.class))).thenAnswer(invocation -> {
@@ -178,23 +167,6 @@ public class ValoracionServiceTest {
         assertThat(exception.getMessage()).isEqualTo("El comentario no puede exceder los 1000 caracteres.");
     }
 
-    @Test
-    @DisplayName("Debe lanzar excepción si el usuario no está activo")
-    void testCrearValoracionUsuarioNoActivo() {
-        Long idUsuario = 999L;
-        Long idCurso = 1L;
-        Integer puntuacion = 4;
-        String comentario = "Comentario válido";
-
-        // Simular que el usuario NO existe
-        when(usuarioValidoRepository.existsById(idUsuario)).thenReturn(false);
-
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            valoracionService.crearValoracion(idUsuario, idCurso, puntuacion, comentario);
-        });
-
-        assertThat(exception.getMessage()).isEqualTo("Usuario con id " + idUsuario + " no esta activo");
-    }
 
     @DisplayName("Test para obtener todas las valoraciones")
     @Test
